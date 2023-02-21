@@ -37,7 +37,7 @@ class Service(models.Model):
         return "{}, {}, price: {}".format(self.name. self.get_service_type_display(), self.price)
 
 class Order(models.Model):
-    CHOISES = [
+    ORDER_TYPES = [
         ('1', 'Веб разработка'),
         ('2', 'Маркетинг'),
         ('3', 'Копирайтинг'),
@@ -51,11 +51,11 @@ class Order(models.Model):
     executor = models.ForeignKey(Executor, on_delete=models.CASCADE)
     name = models.CharField(max_length=250)
     desc = models.CharField(max_length=1000)
-    service_type = models.CharField(choices=CHOISES, default='1', max_length=1)
+    order_type = models.CharField(choices=ORDER_TYPES, default='1', max_length=1)
     price = models.IntegerField()
 
     def __str__(self):
-        return "{}, {}, price: {}".format(self.name. self.get_service_type_display(), self.price)
+        return "{}, {}, price: {}".format(self.name. self.get_order_type_display(), self.price)
 
 class Tag(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE, blank=True, null=True)
@@ -96,7 +96,7 @@ class Ticket(models.Model):
     desc = models.CharField(max_length=1000)
 
     def __str__(self):
-        return "{}, {}, is resolved? {}".format(self.get_severity.display(),
+        return "{}, {}, is resolved? {}".format(self.get_severity_display(),
                                                 self.ticket_date, self.is_resolved)
 class Review(models.Model):
     RATING_FILLED = [
