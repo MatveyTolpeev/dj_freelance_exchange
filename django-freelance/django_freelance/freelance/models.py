@@ -34,7 +34,7 @@ class Service(models.Model):
     price = models.IntegerField()
 
     def __str__(self):
-        return "{}, {}, price: {}".format(self.name. self.get_service_type_display(), self.price)
+        return "{}, {}, price: {}".format(self.name, self.get_service_type_display(), self.price)
 
 class Order(models.Model):
     ORDER_TYPES = [
@@ -55,7 +55,7 @@ class Order(models.Model):
     price = models.IntegerField()
 
     def __str__(self):
-        return "{}, {}, price: {}".format(self.name. self.get_order_type_display(), self.price)
+        return "{}, {}, price: {}".format(self.name, self.get_order_type_display(), self.price)
 
 class Tag(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE, blank=True, null=True)
