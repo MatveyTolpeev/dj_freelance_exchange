@@ -1,10 +1,22 @@
 from django.shortcuts import render
 from rest_framework.response import Response
-from rest_framework import generics
+from rest_framework import generics, status, permissions
+from rest_framework.permissions import BasePermission, IsAuthenticatedOrReadOnly, SAFE_METHODS, IsAuthenticated
 from rest_framework.views import APIView
+from rest_framework.exceptions import PermissionDenied
 from .models import *
 from .serializers import *
 
+
+class Logout(APIView):
+
+    def get(self, request, format=None):
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
+
+class IsExecutor(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.user == request.user
 # TICKET
 class TicketRetrieveView(generics.RetrieveAPIView):
     queryset = Ticket.objects.all()
@@ -13,10 +25,12 @@ class TicketRetrieveView(generics.RetrieveAPIView):
 class TicketUpdateView(generics.UpdateAPIView):
     queryset = Ticket.objects.all()
     serializer_class = CRUDTicketSerializer
+    permission_class = permissions.IsAuthenticatedOrReadOnly
 
 class TicketCreateView(generics.CreateAPIView):
     queryset = Ticket.objects.all()
     serializer_class = CRUDTicketSerializer
+    permission_class = permissions.IsAuthenticatedOrReadOnly
 
 class TicketListView(generics.ListAPIView):
     queryset = Ticket.objects.all()
@@ -34,10 +48,14 @@ class ExecutorRetrieveView(generics.RetrieveAPIView):
     queryset = Executor.objects.all()
     serializer_class = ExecutorSerializer
 
+class ReadOnly(BasePermission):
+    def has_permission(self, request, view):
+        return request.method in SAFE_METHODS
+
 class ExecutorUpdateView(generics.UpdateAPIView):
     queryset = Executor.objects.all()
     serializer_class = CRUDExecutorSerializer
-
+    permission_classes = (IsExecutor,)
 class ExecutorCreateView(generics.CreateAPIView):
     queryset = Executor.objects.all()
     serializer_class = CRUDExecutorSerializer
@@ -55,10 +73,12 @@ class ServiceRetrieveView(generics.RetrieveAPIView):
 class ServiceUpdateView(generics.UpdateAPIView):
     queryset = Service.objects.all()
     serializer_class = CRUDServiceSerializer
+    permission_class = permissions.IsAuthenticatedOrReadOnly
 
 class ServiceCreateView(generics.CreateAPIView):
     queryset = Service.objects.all()
     serializer_class = CRUDServiceSerializer
+    permission_class = permissions.IsAuthenticatedOrReadOnly
 
 class ServiceListView(generics.ListAPIView):
     # queryset = Service.objects.all()
@@ -95,6 +115,7 @@ class CustomerRetrieveView(generics.RetrieveAPIView):
 class CustomerUpdateView(generics.UpdateAPIView):
     queryset = Customer.objects.all()
     serializer_class = CRUDCustomerSerializer
+    permission_class = permissions.IsAuthenticatedOrReadOnly
 
 class CustomerCreateView(generics.CreateAPIView):
     queryset = Customer.objects.all()
@@ -113,10 +134,12 @@ class OrderRetrieveView(generics.RetrieveAPIView):
 class OrderUpdateView(generics.UpdateAPIView):
     queryset = Order.objects.all()
     serializer_class = CRUDOrderSerializer
+    permission_class = permissions.IsAuthenticatedOrReadOnly
 
 class OrderCreateView(generics.CreateAPIView):
     queryset = Order.objects.all()
     serializer_class = CRUDOrderSerializer
+    permission_class = permissions.IsAuthenticatedOrReadOnly
 
 class OrderListView(generics.ListAPIView):
     # queryset = Order.objects.all()
@@ -151,10 +174,12 @@ class TagRetrieveView(generics.RetrieveAPIView):
 class TagUpdateView(generics.UpdateAPIView):
     queryset = Tag.objects.all()
     serializer_class = CRUDTagSerializer
+    permission_class = permissions.IsAuthenticatedOrReadOnly
 
 class TagCreateView(generics.CreateAPIView):
     queryset = Tag.objects.all()
     serializer_class = CRUDTagSerializer
+    permission_class = permissions.IsAuthenticatedOrReadOnly
 
 class TagListView(generics.ListAPIView):
     queryset = Tag.objects.all()
@@ -169,10 +194,12 @@ class OrderingRetrieveView(generics.RetrieveAPIView):
 class OrderingUpdateView(generics.UpdateAPIView):
     queryset = Ordering.objects.all()
     serializer_class = CRUDOrderingSerializer
+    permission_class = permissions.IsAuthenticatedOrReadOnly
 
 class OrderingCreateView(generics.CreateAPIView):
     queryset = Ordering.objects.all()
     serializer_class = CRUDOrderingSerializer
+    permission_class = permissions.IsAuthenticatedOrReadOnly
 
 class OrderingListView(generics.ListAPIView):
     queryset = Ordering.objects.all()
@@ -187,10 +214,12 @@ class MessageRetrieveView(generics.RetrieveAPIView):
 class MessageUpdateView(generics.UpdateAPIView):
     queryset = Message.objects.all()
     serializer_class = CRUDMessageSerializer
+    permission_class = permissions.IsAuthenticatedOrReadOnly
 
 class MessageCreateView(generics.CreateAPIView):
     queryset = Message.objects.all()
     serializer_class = CRUDMessageSerializer
+    permission_class = permissions.IsAuthenticatedOrReadOnly
 
 class MessageListView(generics.ListAPIView):
     queryset = Message.objects.all()
@@ -229,10 +258,12 @@ class ReviewRetrieveView(generics.RetrieveAPIView):
 class ReviewUpdateView(generics.UpdateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    permission_class = permissions.IsAuthenticatedOrReadOnly
 
 class ReviewCreateView(generics.CreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    permission_class = permissions.IsAuthenticatedOrReadOnly
 
 class ReviewListView(generics.ListAPIView):
     queryset = Review.objects.all()
@@ -247,10 +278,12 @@ class AuthoringRetrieveView(generics.RetrieveAPIView):
 class AuthoringUpdateView(generics.UpdateAPIView):
     queryset = Authoring.objects.all()
     serializer_class = CRUDAuthoringSerializer
+    permission_class = permissions.IsAuthenticatedOrReadOnly
 
 class AuthoringCreateView(generics.CreateAPIView):
     queryset = Authoring.objects.all()
     serializer_class = CRUDAuthoringSerializer
+    permission_class = permissions.IsAuthenticatedOrReadOnly
 
 class AuthoringListView(generics.ListAPIView):
     queryset = Authoring.objects.all()
